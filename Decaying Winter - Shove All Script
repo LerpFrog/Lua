@@ -1,0 +1,94 @@
+_G.Code1 = nil;
+_G.Code2 = nil;
+
+local function GrabMainScript()
+    local Script = nil
+    for i,v in pairs(game.Players.LocalPlayer.Backpack.GetChildren(game.Players.LocalPlayer.Backpack)) do
+        if v:IsA("LocalScript") and v.Name ~= "ClickDetectorScript" then
+            Script = v
+        end
+    end
+    return Script
+end
+
+local function GrabEssentials()
+    local FunnyPlace = getrenv()._G
+    local TempEnv = getsenv(GrabMainScript())
+    repeat
+        FunnyPlace = getrenv()._G
+        TempEnv = getsenv(GrabMainScript())
+        wait(0.3)
+    until FunnyPlace["keylist"] ~= nil and TempEnv["afflictstatus"] ~= nil
+    wait(1)
+    if TempEnv["afflictstatus"] ~= nil then
+        local upvalues = getupvalues(TempEnv.afflictstatus)
+        for i,v in pairs(upvalues) do
+            if _G.Code1 ~= nil then
+                break
+            end
+            if typeof(v) == "number" then
+                for x,y in pairs(FunnyPlace) do
+                    if y == v then
+                        _G.Code1 = v
+                        break
+                    end
+                end
+            end
+        end
+        local CorrectIndex = math.huge
+        for i,v in pairs(upvalues) do
+            if v == _G.Code1 and tonumber(i) ~= nil then
+                CorrectIndex = i + 1
+            end
+            if i == CorrectIndex then
+                _G.Code2 = v
+            end
+        end
+    end
+    TempEnv = nil
+    FunnyPlace = nil
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(i, chat)
+    if chat then
+        return
+    end
+    if i.KeyCode == Enum.KeyCode.M then
+        GrabEssentials()
+        for i,v in pairs(workspace.activeHostiles:GetChildren()) do 
+local ohTable1 = {
+    [1] = "meleedamage",
+    [2] = v,
+    [3] = "shove",
+    [4] = false,
+    [5] = "Fist",
+    [6] = false,
+    [7] = false,
+    [8] = {},
+    [9] = v.Head,
+    [10] = {
+        ["speedrating"] = 2,
+        ["blacklisted"] = true,
+        ["animset"] = "Fists",
+        ["desc"] = "Trusty ol' painless. Great for when you're in a pickle or feel like getting up close and personal.",
+        ["chargerating"] = 2,
+        ["weapontype"] = "Fists",
+        ["name"] = "Fists",
+        ["damagerating"] = {
+            [1] = 6,
+            [2] = 20
+        },
+        ["sizerating"] = 1,
+        ["icon"] = "2195005475",
+        ["ability"] = "Better than nothing."
+    }
+}
+local ohNil2 = nil
+local ohNumber3 = _G.Code1
+local ohNumber4 = _G.Code2
+
+workspace.ServerStuff.dealDamage:FireServer(ohTable1, ohNil2, ohNumber3, ohNumber4)
+end
+    end
+end)
+ 
