@@ -1,0 +1,26 @@
+--// Services
+local Players = game:GetService("Players")
+
+--// Variables
+local localPlayer = Players.LocalPlayer
+local originalPerk = localPlayer.Character.current_perk.Value
+
+for _, instance in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+    if instance:IsA("LocalScript") and instance.Name ~= "ClickDetectorScript" then
+        getgenv().Code1 = getupvalue(getsenv(instance).afflictstatus, 16)
+        getgenv().Code2 = getupvalue(getsenv(instance).afflictstatus, 17)
+    end
+end
+local cooldown = false -- to prevent class being glitched
+game:GetService("UserInputService").InputBegan:Connect(function(input,gameprocess)
+    if gameprocess or cooldown then return end
+    if input.KeyCode == Enum.KeyCode.G then
+    cooldown = true
+workspace.ServerStuff.changeStats:InvokeServer("changeclass", "shadow")
+for _ = 1, spawnAmount do
+    workspace.ServerStuff.dealDamage:FireServer("shadowhunter", nil, getgenv().Code1, getgenv().Code2)
+end
+workspace.ServerStuff.changeStats:InvokeServer("changeclass", originalPerk)
+cooldown = false
+end
+end)
